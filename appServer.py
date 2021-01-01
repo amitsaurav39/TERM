@@ -1,5 +1,5 @@
-
-from app import readExcel
+import pandas as pd
+import xlrd
 from flask import Flask, render_template, request, redirect, url_for
 
 
@@ -20,8 +20,16 @@ def index():
 def search():
     if request.method == 'POST':
         empID = request.form['nm']
-        excelData = readExcel()
-        return redirect(url_for('success', data=excelData))
+        df=pd.read_excel(r'C:\Users\amits\Downloads\punit files\alpha version\Excel\TestingExcel.xlsx')
+        result=(df.loc[df['Employee ID']==empID])
+        return redirect(url_for('success', data=result))
+
+
+#def readExcel():
+    
+    #user_data=empID
+    
+   # return result
 
 
 if __name__ == '__main__':
