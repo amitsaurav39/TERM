@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
 
+
 @app.route('/success/<data>')
 def success(data):
     return data
@@ -17,19 +18,45 @@ def index():
 
 
 @app.route('/index', methods=['POST', 'GET'])
-def search():
+def tables():
     if request.method == 'POST':
         empID = request.form['nm']
-        df=pd.read_excel(r'C:\Users\amits\Downloads\punit files\alpha version\Excel\TestingExcel.xlsx')
-        result=(df.loc[df['Employee ID']==empID])
-        return redirect(url_for('success', data=result))
+        
+        data=pd.read_excel(r'C:\Users\amits\Downloads\punit files\alpha version\Excel\TestingExcel.xlsx')
+        data.set_index(['Name'], inplace=True)
+        data.index.name=None
+        result = data.loc[data.EmployeeID==empID]
+
+        if result == None :
+
+            return render_template('error.html')
+            
+        else:
+            return render_template('view.html',tables=[result.to_html(classes='page')], 
+            titles = ['na', 'Employee Details'])
 
 
-#def readExcel():
-    
-    #user_data=empID
-    
-   # return result
+
+
+        #return render_template('view.html',tables=[result.to_html(classes='page')], 
+        #titles = ['na', 'Employee Details'])
+        
+        
+        #if result.empty:
+         #   return render_template('view.html')
+
+       # if data.loc[data.EmployeeID==empID]:
+        #    return render_template('view.html',tables=[result.to_html(classes='page')], 
+       # titles = ['na', 'Employee Details'])
+       # else:
+       #     return render_template('error.html')
+       # return render_template('view.html',tables=[result.to_html(classes='page')], 
+      #  titles = ['na', 'Employee Details'])
+      
+      
+
+
+
 
 
 if __name__ == '__main__':
